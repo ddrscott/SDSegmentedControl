@@ -162,7 +162,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
 - (void)setTitle:(NSString *)title forSegmentAtIndex:(NSUInteger)index
 {
     index = MAX(MIN(index, self.numberOfSegments - 1), 0);
-    UIButton *segmentView = self._items[index];
+    UIButton *segmentView = [self._items objectAtIndex:index];
     [segmentView setTitle:title forState:UIControlStateNormal];
     [segmentView sizeToFit];
     [self setNeedsLayout];
@@ -171,7 +171,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
 - (NSString *)titleForSegmentAtIndex:(NSUInteger)index
 {
     index = MAX(MIN(index, self.numberOfSegments - 1), 0);
-    UIButton *segmentView = self._items[index];
+    UIButton *segmentView = [self._items objectAtIndex:index];
     return [segmentView titleForState:UIControlStateNormal];
 }
 
@@ -184,7 +184,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
 {
     if (self._items.count == 0) return;
     index = MAX(MIN(index, self.numberOfSegments - 1), 0);
-    UIView *segmentView = self._items[index];
+    UIView *segmentView = [self._items objectAtIndex:index];
     [self._items removeObject:segmentView];
 
     if (self.selectedSegmentIndex >= 0)
@@ -308,8 +308,8 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     index = MAX(MIN(index, self.numberOfSegments), 0);
     if (index < self._items.count)
     {
-        segmentView.center = ((UIView *)self._items[index]).center;
-        [self.scrollView insertSubview:segmentView belowSubview:self._items[index]];
+        segmentView.center = ((UIView *) [self._items objectAtIndex:index]).center;
+        [self.scrollView insertSubview:segmentView belowSubview:[self._items objectAtIndex:index]];
         [self._items insertObject:segmentView atIndex:index];
     }
     else
@@ -343,7 +343,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     // Select the first enabled segment
     for (int i = index; i < self._items.count; i++)
     {
-        if (((SDSegmentView *)self._items[i]).enabled)
+        if (((SDSegmentView *)[self._items objectAtIndex:i]).enabled)
         {
             return i;
         }
@@ -351,7 +351,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
 
     for (int i = index; i >= 0; i--)
     {
-        if (((SDSegmentView *)self._items[i]).enabled)
+        if (((SDSegmentView *)[self._items objectAtIndex:i]).enabled)
         {
             return i;
         }
@@ -363,7 +363,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
 - (SDSegmentView *)segmentAtIndex:(NSUInteger)index
 {
     NSParameterAssert(index >= 0 && index < self._items.count);
-    return self._items[index];
+    return [self._items objectAtIndex:index];
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview
@@ -460,7 +460,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
     }
     else
     {
-        SDSegmentView *selectedItem = self._items[self.selectedSegmentIndex];
+        SDSegmentView *selectedItem = [self._items objectAtIndex:self.selectedSegmentIndex];
         selectedItemCenterPosition = selectedItem.center.x;
 
         CGRect stainFrame = UIEdgeInsetsInsetRect(selectedItem.innerFrame, self.stainEdgeInsets);
@@ -881,7 +881,7 @@ const CGFloat kSDSegmentedControlScrollOffset = 20;
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (_isScrollingBySelection) return;
-    CGFloat selectedItemCenterPosition = ((SDSegmentView *)self._items[self.selectedSegmentIndex]).center.x;
+    CGFloat selectedItemCenterPosition = ((SDSegmentView *)[self._items objectAtIndex:self.selectedSegmentIndex]).center.x;
     [self drawPathsToPosition:selectedItemCenterPosition - scrollView.contentOffset.x animated:NO];
     self._selectedStainView.center = CGPointMake(selectedItemCenterPosition, self._selectedStainView.center.y);
 }
